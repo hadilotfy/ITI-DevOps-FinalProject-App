@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-#        string(name:'bname',defaultValue: "${BRANCH_NAME}",description: "holds the name of the current branch")
+//        string(name:'bname',defaultValue: "${BRANCH_NAME}",description: "holds the name of the current branch")
         choice(name: 'bname', choices:['dev,'test','preprod','release'])
     }
     stages {
