@@ -10,7 +10,7 @@ pipeline {
                 echo "Build Stage"
                 script{
                     if( params.bname== 'release'){
-                        withCredentials([usernamePassword(credentialsId: 'iti-smart-dockerhub', usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]){
+                        withCredentials([usernamePassword(credentialsId: 'hadi-dockerhub-creds', usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]){
                             sh '''
                                 docker login -u ${USERNAME} -p ${PASSWORD}
                                 docker build -t hadilotfy/jenkins_lab2:build#${BUILD_NUMBER}
@@ -30,7 +30,7 @@ pipeline {
                 echo "Deploy Stage"
                 script{
                     if (params.bname == 'dev' || params.bname=='test' || params.bname=='prod'){
-                        withCredentials([file(credentialsId: 'iti-smart-kubeconfig', variable: 'KUBECOFIG_FILE')]){
+                        withCredentials([file(credentialsId: 'hadi-minikube-kubeconfig', variable: 'KUBECOFIG_FILE')]){
                             sh '''
                                 export BUILD_NUM=$(cat ./build_num.t)
                                 re='^[0-9]+$'
