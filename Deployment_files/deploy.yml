@@ -13,7 +13,7 @@ spec:
         app: website
     spec:
       containers:
-      - image: hadilotfy/jenkins_lab2:build#${BUILD_NUM}
+      - image: hadilotfy/jenkins_lab2:build-${BUILD_NUM}
         name: website-image
         imagePullPolicy: Always
         ports:
