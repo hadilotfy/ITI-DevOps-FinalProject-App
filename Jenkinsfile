@@ -3,8 +3,8 @@ pipeline {
         label 'jenkins-slave'
     }
     parameters {
-//        string(name:'bname',defaultValue: "${BRANCH_NAME}",description: "holds the name of the current branch")
-        choice(name: 'bname', choices:['dev','test','preprod','release'])
+        string(name:'bname',defaultValue: "${BRANCH_NAME}",description: "holds the name of the current branch")
+//        choice(name: 'bname', choices:['dev','test','preprod','release'])
     }
     stages {
         stage('build'){
@@ -43,8 +43,8 @@ pipeline {
                             '''
                             sh """
                                 echo "==============================="
-                                echo "Branch Name: ${params.bname}  "
-                                kubectl create ns ${params.bname} --kubeconfig \${KUBECONFIG_FILE}
+                                echo "Branch Name: ${params.bname} "
+                                kubectl create ns ${params.bname} --kubeconfig \${KUBECONFIG_FILE} || echo "ns already AlreadyExists"
                                 kubectl apply -n ${params.bname} -f Deployment_files --kubeconfig \${KUBECONFIG_FILE}
                                                                                                   
                             """
@@ -55,4 +55,5 @@ pipeline {
         }
     }
 }
+
 
