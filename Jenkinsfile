@@ -31,7 +31,7 @@ pipeline {
             steps{
                 echo "Deploy Stage"
                 script{
-                    if (params.bname == 'dev' || params.bname=='test' || params.bname=='prod'){
+                    if (params.bname == 'dev' || params.bname=='test' || params.bname=='preprod'){
                         withCredentials([file(credentialsId: 'hadi-minikube-kubeconfig', variable: 'KUBECONFIG_FILE')]){
                             sh '''#!/bin/bash
                                 export BUILD_NUM=$(cat ../build_num.t)
