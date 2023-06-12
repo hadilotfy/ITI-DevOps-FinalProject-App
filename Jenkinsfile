@@ -15,8 +15,8 @@ pipeline {
                         withCredentials([usernamePassword(credentialsId: 'hadi-dockerhub-creds', usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]){
                             sh '''
                                 docker login -u ${USERNAME} -p ${PASSWORD}
-                                docker build -t hadilotfy/jenkins_lab2:build#${BUILD_NUMBER}
-                                docker push
+                                docker build -t hadilotfy/jenkins_lab2:build-${BUILD_NUMBER} .
+                                docker push hadilotfy/jenkins_lab2:build-${BUILD_NUMBER}
                                 echo ${BUILD_NUMBER} > ../build_num.t
                             '''
                         }
@@ -33,7 +33,7 @@ pipeline {
                 script{
                     if (params.bname == 'dev' || params.bname=='test' || params.bname=='prod'){
                         withCredentials([file(credentialsId: 'hadi-minikube-kubeconfig', variable: 'KUBECONFIG_FILE')]){
-                            sh '''
+                            sh '''#!/bin/bash
                                 export BUILD_NUM=$(cat ../build_num.t)
                                 re='^[0-9]+$'
                                 if ! [[ $BUILD_NUM =~ $re ]] ; then echo "error: No BUILD_NUM, assume 0"; BUILD_NUM=0; fi
