@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: website-deployment
+  name: webapp-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: website
+      app: webapp
   template:
     metadata:
       labels:
-        app: website
+        app: webapp
     spec:
       containers:
       - image: hadilotfy/jenkins_lab2:build-${BUILD_NUM}
@@ -18,4 +18,6 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+          name: http-port
+          protocol: TCP
 
