@@ -27,16 +27,16 @@ pipeline {
             steps{
                 echo "Deployment Stage"
                 script{
-                        withCredentials([file(credentialsId: 'eks-webapp-cluster-kubeconfig', variable: 'KUBECONFIG_FILE')]){
                             sh '''#!/bin/bash
+                                KUBECONFIG=''
                                 export BUILD_NUM=$(cat ../build_num.t)
                                 mv Deployment_files/deploy.yml Deployment_files/deploy.yml.tmp
                                 cat Deployment_files/deploy.yml.tmp | envsubst > Deployment_files/deploy.yml
                                 rm -f Deployment_files/deploy.yml.tmp
-                                kubectl apply -f Deployment_files
+
+                                kubectl apply -f Deployment_files 
                             '''
 
-                        }
                 }
 
             }
