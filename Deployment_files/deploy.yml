@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webapp-deployment
+  namespace: weboo
 spec:
   replicas: 1
   selector:
@@ -13,7 +14,7 @@ spec:
         app: webapp
     spec:
       containers:
-      - image: hadilotfy/jenkins_lab2:build-${BUILD_NUM}
+      - image: docker.io/hadilotfy/iti-webapp:build-${BUILD_NUM}
         name: website-image
         imagePullPolicy: Always
         ports:
