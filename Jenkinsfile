@@ -7,7 +7,9 @@ pipeline {
             steps{
                 echo "Build Stage"
                 script{
-                    if( ${BRANCH_NAME} == 'helm_release'){
+                    echo 'inside script'
+                    if( "${BRANCH_NAME}" == 'helm_release'){
+                        echo 'inside if'
                         withCredentials([usernamePassword(credentialsId: 'hadi-dockerhub-creds', usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]){
                             sh '''
                                 docker login -u ${USERNAME} -p ${PASSWORD}
@@ -27,8 +29,10 @@ pipeline {
             steps{
                 echo "Deploy Stage"
                 script{
-                    if (${BRANCH_NAME} == 'helm_dev' || ${BRANCH_NAME}=='helm_test' || ${BRANCH_NAME}=='helm_preprod'){
+                    echo "$BRANCH_NAME"
+                    if ("${BRANCH_NAME}" == 'helm-dev' || "${BRANCH_NAME}"=='helm-test' || "${BRANCH_NAME}"=='helm-preprod'){
                         withCredentials([file(credentialsId: 'hadi-minikube-kubeconfig', variable: 'KUBECONFIG_FILE')]){
+                            echo 'inside deploy withcreds'
                             sh '''#!/bin/bash
                                 export BUILD_NUM=$(cat ../build_num.t)
                                 re='^[0-9]+$'
@@ -53,5 +57,6 @@ pipeline {
         }
     }
 }
+
 
 
