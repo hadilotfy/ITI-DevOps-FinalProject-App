@@ -42,8 +42,7 @@ pipeline {
                                     action='upgrade'
                                 fi
                                 helm \$action "branch-${BRANCH_NAME}-release" ./app_chart \
-                                              --set namespace=${BRANCH_NAME}\
-                                              --set deploy.image.tag='build-\$BUILD_NUM'
+                                              --set deploy.image.tag='build-\$BUILD_NUM' \
                                               --kubeconfig \${KUBECONFIG_FILE}
                                                                                                   
                             """
