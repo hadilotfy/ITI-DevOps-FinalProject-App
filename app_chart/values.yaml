@@ -1,0 +1,25 @@
+# Default values for helm_lab.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace: "helmwebapp"
+deploy:
+  name: webserver
+  containerPortName:  "http-port"
+  replicas: 2
+  matchlabels:
+    app: "webapp"
+    env: "ddd"
+  image:
+    repository: "docker.io/hadilotfy/helm_lab"
+    pullPolicy: "IfNotPresent"
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "build-0"
+
+service:
+  type: "NodePort"
+
+
+
+
+

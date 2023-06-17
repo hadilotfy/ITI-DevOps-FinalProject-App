@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deploy.name }}
+  namespace: {{.Values.namespace}}
+spec:
+  replicas: {{ .Values.deploy.replicas }}
+  selector:
+    matchLabels:
+{{ include "labels" . | indent 6 }}
+  template:
+    metadata:
+      labels:
+{{ include "labels" . | indent 8 }}
+    spec:
+      containers:
+      - image: {{ .Values.deploy.image.repository}}:{{ .Values.deploy.image.tag }}
+        name: website-image
+        imagePullPolicy: {{ .Values.deploy.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+          name: {{.Values.deploy.containerPortName}}
+          protocol: TCP
