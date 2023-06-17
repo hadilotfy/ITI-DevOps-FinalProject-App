@@ -2,14 +2,14 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-namespace: "helm-dev-app"
+namespace: "helm-app"
 deploy:
   name: webserver
   containerPortName:  "http-port"
   replicas: 2
   matchlabels:
     app: "webapp"
-    env: "dev"
+    env: "general"
   image:
     repository: "docker.io/hadilotfy/helm_lab"
     pullPolicy: "IfNotPresent"
