@@ -1,6 +1,5 @@
 ## Application Part of Helm Lab - ITI - DevOps - Smart Village
-
-# Helm,Docker,Jenkins and Nginx Hands-On Project
+## see ** https://github.com/hadilotfy/Helm-Hands-On-Project **
 
 File structure:
 * webpages         : directoy of webapp code.
