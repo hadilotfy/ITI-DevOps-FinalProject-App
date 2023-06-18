@@ -1,3 +1,4 @@
+def release_name = "branch-${BRANCH_NAME}-release"
 pipeline {
     agent {
         label 'jenkins-slave'
@@ -7,9 +8,7 @@ pipeline {
             steps{
                 echo "Build Stage"
                 script{
-                    echo 'inside script'
-                    if( "${BRANCH_NAME}" == 'helm_release'){
-                        echo 'inside if'
+                    if( "${BRANCH_NAME}" == 'helm-release'){
                         withCredentials([usernamePassword(credentialsId: 'hadi-dockerhub-creds', usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]){
                             sh '''
                                 docker login -u ${USERNAME} -p ${PASSWORD}
@@ -20,7 +19,7 @@ pipeline {
                         }
                     }
                     else {
-                        echo "sorry, build only if branch: release  you chose branch: ${BRANCH_NAME}"
+                        echo "sorry, build only if branch: \'helm-release\', current branch: ${BRANCH_NAME}"
                     }
                 }
             }
@@ -29,26 +28,22 @@ pipeline {
             steps{
                 echo "Deploy Stage"
                 script{
-                    echo "$BRANCH_NAME"
                     if ("${BRANCH_NAME}" == 'helm-dev' || "${BRANCH_NAME}"=='helm-test' || "${BRANCH_NAME}"=='helm-preprod'){
                         withCredentials([file(credentialsId: 'hadi-minikube-kubeconfig', variable: 'KUBECONFIG_FILE')]){
-                            echo 'inside deploy withcreds'
-                            sh '''#!/bin/bash
-                                export BUILD_NUM=$(cat ../build_num.t)
-                                re='^[0-9]+$'
-                                if ! [[ $BUILD_NUM =~ $re ]] ; then echo "error: No BUILD_NUM, assume 0"; BUILD_NUM=0; fi
-                            '''
-                            sh """
-                                echo "==============================="
-                                echo "Branch Name: ${BRANCH_NAME} "
+                            sh """#!/bin/bash
+                                export BUILD_NUM=\$(cat ../build_num.t)
+                                re='^[0-9]+\$'
+                                if ! [[ \$BUILD_NUM =~ \$re ]] ; then echo "No BUILD_NUM, assume 0"; BUILD_NUM=0; fi
+                                echo "============= Branch  Name=== ${release_name}"
+                                echo "============= Release Name=== ${BRANCH_NAME}"
+                                echo "============= Image Build==== #\$BUILD_NUM"
                                 action='install'
-                                if [ helm list  | cut -f 1 | grep ${BRANCH_NAME} ]; then
-                                    action='upgrade'
-                                fi
-                                helm \$action "branch-${BRANCH_NAME}-release" ./app_chart \
-                                              --set deploy.image.tag='build-\$BUILD_NUM' \
+                                helm list --kubeconfig \${KUBECONFIG_FILE} | cut -f 1 | grep ${release_name} && action='upgrade'
+                                helm \$action "${release_name}" ./app_chart \\
+                                              --set deploy.image.tag="build-\$BUILD_NUM" \\
+                                              --values 'branch_chartvals.yml' \\
                                               --kubeconfig \${KUBECONFIG_FILE}
-                                                                                                  
+
                             """
                         }
                     }
@@ -57,6 +52,5 @@ pipeline {
         }
     }
 }
-
 
 
